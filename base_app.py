@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 
 st.set_page_config(page_title="Anime Recommendation System")
 
@@ -14,13 +15,55 @@ def main():
 
     # Home Page
     if page == "Home":
-        st.title("Project Overview")
-        st.write("Details about the project, objectives, and goals.")
+        st.title("Anime Recommender System")
+        # Introduction
+        st.write("""
+            In the rapidly evolving landscape of today's technology-driven world, recommender systems have become pivotal in shaping our digital experiences. These systems play a crucial role in assisting individuals in making informed choices about the content they engage with on a daily basis. One particularly compelling application is in the realm of movie content recommendations, where intelligent algorithms have the potential to guide viewers through an overwhelming array of options and connect them with titles that align with their preferences.
+        """)
+
+        # Display a picture
+        image = Image.open("visuals/assets/background_image.png")  # Make sure to replace this with your image path
+        st.image(image, caption="Anime Recommender System Overview", use_column_width=True)
+
+        # Grid layout for the relevant information
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.write("**Overview**")
+            st.write("""
+                The anime recommender system aims to enhance user experience by delivering personalized recommendations. By leveraging user interaction data and anime metadata, the system helps users discover content that aligns with their preferences, increasing engagement and retention.
+            """)
+
+            st.write("**Objectives of the Project**")
+            st.write("""
+                The primary objective is to develop a robust anime recommender system that provides accurate, diverse, and personalized recommendations. The system seeks to enhance user experience, increase engagement, and drive revenue growth for the platform.
+            """)
+
+            st.write("**Data Source**")
+            st.write("""
+                The dataset includes anime content information (anime.csv) and user ratings (training.csv). The test.csv file is used for creating rating predictions. The submissions.csv file shows the expected format for submissions.
+            """)
+
+        with col2:
+            st.write("**Importance of the Study**")
+            st.write("""
+                Developing an anime recommender system is crucial for enhancing user experience, driving business growth, and maintaining a competitive edge. This project also contributes to advancements in technology and ethics within the field.
+            """)
+
+            st.write("**Problem Statement**")
+            st.write("""
+                With the vast amount of anime content available and diverse viewer preferences, users often face decision fatigue. Traditional discovery methods are insufficient for meeting the dynamic needs of modern users.
+            """)
+
+            st.write("**Hypothesis**")
+            st.write("""
+                Testing the effectiveness of the recommender system will help validate its ability to improve user experience, increase retention, drive revenue, and ensure fair and inclusive recommendations.
+            """)
 
     # Team Page
     elif page == "Team":
         st.title("Meet the team")
-        st.write("Details about team members.")
+        st.write("Our team is a group of passionate individuals dedicated to creating an innovative anime recommender system. Each member brings unique skills and expertise to the project, contributing to its success. Below, you can learn more about the team members, their roles, and how to connect with them.")
         
         team_members = [
             {
@@ -115,5 +158,3 @@ def main():
 # Running the app
 if __name__ == '__main__':
     main()
-
-    
