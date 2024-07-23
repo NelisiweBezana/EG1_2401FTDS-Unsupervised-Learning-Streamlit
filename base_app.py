@@ -11,54 +11,27 @@ def display_team_member(image, name, surname, email, github, linkedin):
 
 def main():
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", ["Home", "Team", "EDA", "Anime Recommendation"])
+    page = st.sidebar.radio("Go to", ["Anime Recommendation", "Team", "About", "EDA", ])
 
-    # Home Page
-    if page == "Home":
-        st.title("Anime Recommender System")
-        # Introduction
-        st.write("""
-            In the rapidly evolving landscape of today's technology-driven world, recommender systems have become pivotal in shaping our digital experiences. These systems play a crucial role in assisting individuals in making informed choices about the content they engage with on a daily basis. One particularly compelling application is in the realm of movie content recommendations, where intelligent algorithms have the potential to guide viewers through an overwhelming array of options and connect them with titles that align with their preferences.
-        """)
+    # Anime Recommendation Page
+    if page == "Anime Recommendation":
+        st.title("Anime Recommendation System")
 
-        # Display a picture
-        image = Image.open("visuals/assets/background_image.png")  # Make sure to replace this with your image path
-        st.image(image, caption="Anime Recommender System Overview", use_column_width=True)
+        st.write("## Select an Algorithm")
+        algorithm = st.radio("Select an algorithm:", ("Content Based Filtering", "Collaborative Based Filtering"))
 
-        # Grid layout for the relevant information
-        col1, col2 = st.columns(2)
+        st.write("## Enter Your Three Favorite Anime")
+        first_anime = st.text_input("First Option")
+        second_anime = st.text_input("Second Option")
+        third_anime = st.text_input("Third Option")
 
-        with col1:
-            st.write("**Overview**")
-            st.write("""
-                The anime recommender system aims to enhance user experience by delivering personalized recommendations. By leveraging user interaction data and anime metadata, the system helps users discover content that aligns with their preferences, increasing engagement and retention.
-            """)
-
-            st.write("**Objectives of the Project**")
-            st.write("""
-                The primary objective is to develop a robust anime recommender system that provides accurate, diverse, and personalized recommendations. The system seeks to enhance user experience, increase engagement, and drive revenue growth for the platform.
-            """)
-
-            st.write("**Data Source**")
-            st.write("""
-                The dataset includes anime content information (anime.csv) and user ratings (training.csv). The test.csv file is used for creating rating predictions. The submissions.csv file shows the expected format for submissions.
-            """)
-
-        with col2:
-            st.write("**Importance of the Study**")
-            st.write("""
-                Developing an anime recommender system is crucial for enhancing user experience, driving business growth, and maintaining a competitive edge. This project also contributes to advancements in technology and ethics within the field.
-            """)
-
-            st.write("**Problem Statement**")
-            st.write("""
-                With the vast amount of anime content available and diverse viewer preferences, users often face decision fatigue. Traditional discovery methods are insufficient for meeting the dynamic needs of modern users.
-            """)
-
-            st.write("**Hypothesis**")
-            st.write("""
-                Testing the effectiveness of the recommender system will help validate its ability to improve user experience, increase retention, drive revenue, and ensure fair and inclusive recommendations.
-            """)
+        if st.button("Recommend"):
+            if algorithm == "Content Based Filtering":
+                # content-based filtering logic
+                pass
+            else:
+                # model-based collaborative filtering logic (loading a pickled model)
+                pass
 
     # Team Page
     elif page == "Team":
@@ -129,31 +102,58 @@ def main():
                 )
                 st.markdown("<br>", unsafe_allow_html=True)
 
+    # About Page
+    elif page == "About":
+        st.title("Anime Recommender System")
+        # Introduction
+        st.write("""
+            In the rapidly evolving landscape of today's technology-driven world, recommender systems have become pivotal in shaping our digital experiences. These systems play a crucial role in assisting individuals in making informed choices about the content they engage with on a daily basis. One particularly compelling application is in the realm of movie content recommendations, where intelligent algorithms have the potential to guide viewers through an overwhelming array of options and connect them with titles that align with their preferences.
+        """)
+
+        # Display a picture
+        image = Image.open("visuals/assets/background_image.png")  # Make sure to replace this with your image path
+        st.image(image, caption="Anime Recommender System Overview", use_column_width=True)
+
+        # Grid layout for the relevant information
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.write("**Overview**")
+            st.write("""
+                The anime recommender system aims to enhance user experience by delivering personalized recommendations. By leveraging user interaction data and anime metadata, the system helps users discover content that aligns with their preferences, increasing engagement and retention.
+            """)
+
+            st.write("**Objectives of the Project**")
+            st.write("""
+                The primary objective is to develop a robust anime recommender system that provides accurate, diverse, and personalized recommendations. The system seeks to enhance user experience, increase engagement, and drive revenue growth for the platform.
+            """)
+
+            st.write("**Data Source**")
+            st.write("""
+                The dataset includes anime content information (anime.csv) and user ratings (training.csv). The test.csv file is used for creating rating predictions. The submissions.csv file shows the expected format for submissions.
+            """)
+
+        with col2:
+            st.write("**Importance of the Study**")
+            st.write("""
+                Developing an anime recommender system is crucial for enhancing user experience, driving business growth, and maintaining a competitive edge. This project also contributes to advancements in technology and ethics within the field.
+            """)
+
+            st.write("**Problem Statement**")
+            st.write("""
+                With the vast amount of anime content available and diverse viewer preferences, users often face decision fatigue. Traditional discovery methods are insufficient for meeting the dynamic needs of modern users.
+            """)
+
+            st.write("**Hypothesis**")
+            st.write("""
+                Testing the effectiveness of the recommender system will help validate its ability to improve user experience, increase retention, drive revenue, and ensure fair and inclusive recommendations.
+            """)
+
     # EDA Page
     elif page == "EDA":
         st.title("Exploratory Data Analysis (EDA)")
         st.write("## Data Insights and Visualizations")
         st.write("Visualizations and insights will go here.")
-
-    # Anime Recommendation Page
-    elif page == "Anime Recommendation":
-        st.title("Anime Recommendation System")
-
-        st.write("## Select an Algorithm")
-        algorithm = st.radio("Select an algorithm:", ("Content Based Filtering", "Collaborative Based Filtering"))
-
-        st.write("## Enter Your Three Favorite Anime")
-        first_anime = st.text_input("First Option")
-        second_anime = st.text_input("Second Option")
-        third_anime = st.text_input("Third Option")
-
-        if st.button("Recommend"):
-            if algorithm == "Content Based Filtering":
-                # content-based filtering logic
-                pass
-            else:
-                # model-based collaborative filtering logic (loading a pickled model)
-                pass
 
 # Running the app
 if __name__ == '__main__':
