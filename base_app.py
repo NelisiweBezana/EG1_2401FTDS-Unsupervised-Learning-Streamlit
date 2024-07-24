@@ -1,7 +1,11 @@
 import streamlit as st
 from PIL import Image
 
-st.set_page_config(page_title="Anime Recommender", page_icon=":shark:", layout="centered", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Anime Recommender", 
+                   page_icon=":shark:", 
+                   layout="centered", 
+                   initial_sidebar_state="expanded",
+                   )
 
 def display_team_member(image, name, surname, email, github, linkedin):
     st.image(image, width=120)
