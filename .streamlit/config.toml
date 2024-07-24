@@ -1,9 +1,10 @@
 [theme]
-primaryColor="#FF69B4"
-backgroundColor="#ffffff"
-secondaryBackgroundColor="#f0f2f6"
+primaryColor="#5e87b8" 
+backgroundColor="#eaf6f6"
+secondaryBackgroundColor="#a6e4e7"
 textColor="#000000"
 font="sans serif"
 
 [layout]
-wide = false
+wide = true  # Sets the layout to wide for more space
+
