@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from PIL import Image
 
 st.set_page_config(page_title="Anime Recommender", 
@@ -12,6 +15,10 @@ def display_team_member(image, name, surname, email, github, linkedin):
     st.markdown(f"**{name} {surname}**")
     st.markdown(f"Email: {email}")
     st.markdown(f"[GitHub]({github}) / [LinkedIn]({linkedin})")
+
+# Load your data
+anime_data = pd.read_csv('Data/anime.csv')
+anime_data['genre'] = anime_data['genre'].fillna('')
 
 def main():
     st.sidebar.title("Navigation")
@@ -35,7 +42,42 @@ def main():
         if st.button("Recommend"):
             if algorithm == "Content Based Filtering":
                 # content-based filtering logic
-                pass
+                tfidf = TfidfVectorizer(stop_words='english')
+                tfidf_matrix = tfidf.fit_transform(anime_data['genre'])
+                cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+
+                def get_recommendations(anime_list):
+                    # Ensure that user input anime are in the dataset
+                    user_anime = anime_data[anime_data['name'].str.contains('|'.join(anime_list), case=False, na=False)]
+                    if user_anime.empty:
+                        st.write("None of the entered anime titles were found in the dataset.")
+                        return []
+
+                    # Find the indices of the user-selected anime
+                    indices = user_anime.index.tolist()
+
+                    # Calculate the average similarity score for each anime in the dataset
+                    sim_scores = []
+                    for idx in indices:
+                        sim_scores.extend(list(enumerate(cosine_sim[idx])))
+
+                    # Sort by similarity score and exclude the anime in the user’s list
+                    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+                    sim_scores = [i for i in sim_scores if i[0] not in indices]  # Exclude user input anime
+                    sim_scores = sim_scores[:10]  # Get top 10 recommendations
+
+                    # Extract anime names for recommended indices
+                    anime_indices = [i[0] for i in sim_scores]
+                    return anime_data.iloc[anime_indices]['name'].values
+
+                recommendations = get_recommendations([first_anime, second_anime, third_anime])
+                
+                if len(recommendations) > 0:
+                    st.write("### Recommended Anime:")
+                    for rec in recommendations:
+                        st.write(f"- {rec}")
+                else:
+                    st.write("No recommendations available.")
             else:
                 # model-based collaborative filtering logic (loading a pickled model)
                 pass
