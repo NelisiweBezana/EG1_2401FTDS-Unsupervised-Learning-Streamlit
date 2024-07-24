@@ -11,10 +11,10 @@ def display_team_member(image, name, surname, email, github, linkedin):
 
 def main():
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", ["Anime Recommendation", "About", "EDA", "Team",])
+    page = st.sidebar.radio("Go to", ["Get Started", "Recommender",  "EDA", "About Us",])
 
     # Anime Recommendation Page
-    if page == "Anime Recommendation":
+    if page == "Recommender":
         st.title("Anime Recommendation")
 
         image = Image.open("visuals/assets/home_page.jpg") 
@@ -38,11 +38,11 @@ def main():
 
    
     # About Page
-    elif page == "About":
+    elif page == "Get Started":
         st.title("Discover Your Next Favorite Anime")
 
         st.write("""
-            Dive into a world where your next favorite anime is just a click away. The recommender system uses cutting-edge technology to understand your unique tastes and serve up anime recommendations that are perfectly tailored for you. Get ready to embark on an exciting journey of anime discovery!
+            Welcome to Anime Experts, where our passion for anime meets the power of cutting-edge technology. At Anime Experts, we strive to enhance the anime viewing experience for enthusiasts around the globe by leveraging advanced data-driven solutions. Our latest endeavor involves developing an intelligent Anime Recommender System, designed to provide personalized and highly accurate anime recommendations to our users.
         """)
 
         st.write("\n")
@@ -53,7 +53,7 @@ def main():
         # Get Started Section
         st.header("Get Started")
         st.write("""
-            To begin exploring personalized anime recommendations, navigate to the Anime Recommendation page. Select your preferred recommendation method and input your top three anime choices. The recommender system will analyze your preferences and generate tailored recommendations, enhancing your viewing experience.
+            To begin exploring personalized anime recommendations, navigate to the Recomender page. Select your preferred recommendation method and input your top three anime choices. The recommender system will analyze your preferences and generate tailored recommendations, enhancing your viewing experience.
         """)
 
         # How It Works Section
@@ -92,9 +92,9 @@ def main():
         st.write("Visualizations and insights will go here.")
 
     # Team Page
-    elif page == "Team":
+    elif page == "About Us":
         st.title("Meet the team")
-        st.write("Our team is a group of passionate individuals dedicated to creating an innovative anime recommender system. Each member brings unique skills and expertise to the project, contributing to its success. Below, you can learn more about the team members, their roles, and how to connect with them.")
+        st.write("Our team is a group of passionate individuals dedicated to creating an innovative anime recommender system. Each member brings unique skills and expertise to the project, contributing to its success. Below, you will find the team members behind the system, their roles, and how to connect with them.")
         
         team_members = [
             {
