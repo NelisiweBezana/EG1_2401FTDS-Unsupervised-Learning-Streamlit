@@ -16,7 +16,7 @@ def display_team_member(image, name, surname, email, github, linkedin):
     st.markdown(f"Email: {email}")
     st.markdown(f"[GitHub]({github}) / [LinkedIn]({linkedin})")
 
-# Load your data
+# Loading data
 anime_data = pd.read_csv('Data/anime.csv')
 anime_data['genre'] = anime_data['genre'].fillna('')
 
