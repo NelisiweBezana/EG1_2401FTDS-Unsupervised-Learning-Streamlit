@@ -249,7 +249,7 @@ def main():
                 "image": "visuals/team/profile.jpg",
                 "name": "Charmaine",
                 "surname": "Mduli",
-                "role" : "",
+                "role" : "Model Dev",
                 "email": "charmainemdluli4@gmail.com",
                 "github": "https://github.com/janesmith",
                 "linkedin": "https://www.linkedin.com/in/janesmith/"
