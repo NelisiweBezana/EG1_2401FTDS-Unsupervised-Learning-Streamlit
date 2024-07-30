@@ -143,17 +143,20 @@ def main():
             "Genre Distribution": "genre_distribution",
             "Rating Distribution": "rating_distribution",
             "Top 10 Most Popular Anime": "top_10_popular",
+            "Top Rated Anime": "top_rated",
         }
         
-        # Sidebar options for EDA visualizations
         visualization_choice = st.selectbox("Choose a visualization:", list(visualizations.keys()))
         
         # Display selected visualization with insights
         if visualization_choice == "Genre Distribution":
             st.subheader("Genre Distribution")
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(10, 8))  # Increase figure size
             genre_counts = anime_data['genre'].str.split(', ').explode().value_counts()
             sns.barplot(x=genre_counts.values, y=genre_counts.index, ax=ax)
+            ax.set_xlabel('Count')
+            ax.set_ylabel('Genre')
+            ax.set_title('Genre Distribution')
             st.pyplot(fig)
             st.write("""
             **Insights:**
@@ -163,8 +166,11 @@ def main():
 
         elif visualization_choice == "Rating Distribution":
             st.subheader("Rating Distribution")
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(10, 6))  # Increase figure size
             sns.histplot(anime_data['rating'].dropna(), bins=20, kde=True, ax=ax)
+            ax.set_xlabel('Rating')
+            ax.set_ylabel('Count')
+            ax.set_title('Rating Distribution')
             st.pyplot(fig)
             st.write("""
             **Insights:**
@@ -175,14 +181,33 @@ def main():
         elif visualization_choice == "Top 10 Most Popular Anime":
             st.subheader("Top 10 Most Popular Anime")
             top_10_anime = anime_data.nlargest(10, 'members')
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(10, 6))  # Increase figure size
             sns.barplot(x=top_10_anime['members'], y=top_10_anime['name'], ax=ax)
+            ax.set_xlabel('Members')
+            ax.set_ylabel('Anime')
+            ax.set_title('Top 10 Most Popular Anime')
             st.pyplot(fig)
             st.write("""
             **Insights:**
             - This bar chart shows the top 10 most popular anime based on the number of members.
             - These anime titles have a high number of followers, indicating their popularity.
             """)
+
+        elif visualization_choice == "Top Rated Anime":
+            st.subheader("Top Rated Anime")
+            top_rated_anime = anime_data.nlargest(10, 'rating')
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.barplot(x=top_rated_anime['rating'], y=top_rated_anime['name'], ax=ax)
+            ax.set_xlabel('Rating')
+            ax.set_ylabel('Anime')
+            ax.set_title('Top Rated Anime')
+            st.pyplot(fig)
+            st.write("""
+            **Insights:**
+            - This bar chart shows the top 10 highest-rated anime.
+            - These titles are highly rated by viewers, indicating their quality and viewer satisfaction.
+            """)
+
 
     # Team Page
     elif page == "About Us":
