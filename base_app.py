@@ -12,10 +12,11 @@ st.set_page_config(page_title="Anime Recommender",
                    initial_sidebar_state="expanded",
                    )
 
-def display_team_member(image, name, surname, email, github, linkedin):
+def display_team_member(image, name, surname, role, email, github, linkedin):
     st.image(image, width=120)
     st.markdown(f"**{name} {surname}**")
-    st.markdown(f"Email: {email}")
+    st.markdown(f"{role}")
+    st.markdown(f"{email}")
     st.markdown(f"[GitHub]({github}) / [LinkedIn]({linkedin})")
 
 # Loading data
@@ -37,9 +38,11 @@ def main():
         algorithm = st.radio("Select an algorithm:", ("Content Based Filtering", "Collaborative Based Filtering"))
 
         st.write("## Enter Your Three Favorite Anime")
-        first_anime = st.text_input("First Option")
-        second_anime = st.text_input("Second Option")
-        third_anime = st.text_input("Third Option")
+        
+        all_anime_titles = anime_data['name'].tolist()
+        first_anime = st.selectbox("First Option", options=[""] + all_anime_titles)
+        second_anime = st.selectbox("Second Option", options=[""] + all_anime_titles)
+        third_anime = st.selectbox("Third Option", options=[""] + all_anime_titles)
 
         if st.button("Recommend"):
             if algorithm == "Content Based Filtering":
@@ -219,22 +222,25 @@ def main():
                 "image": "visuals/team/NelisiweBezana.jpg",
                 "name": "Nelisiwe",
                 "surname": "Bezana",
+                "role" : "Model Dev | Streamlit Dev",
                 "email": "nelisiwebezana@gmail.com",
                 "github": "https://github.com/NelisiweBezana",
                 "linkedin": "https://www.linkedin.com/in/nelisiwebezana/"
             },
             {
-                "image": "visuals/team/profile.jpg",
+                "image": "visuals/team/TshepisoMudau.jpg",
                 "name": "Tshepiso",
                 "surname": "Mudau",
+                "role" : "Model Dev",
                 "email": "mudaureneillwe@gmail.com",
-                "github": "https://github.com/janesmith",
-                "linkedin": "https://www.linkedin.com/in/janesmith/"
+                "github": "https://github.com/tshepisoMudau",
+                "linkedin": "https://www.linkedin.com/in/tshepiso-mudau-34b10226a/"
             },
             {
                 "image": "visuals/team/profile.jpg",
                 "name": "Khuthadzo",
                 "surname": "Tshifura",
+                "role" : "Data Cleaning | EDA",
                 "email": "tshifurakhuthadzo@gmail.com",
                 "github": "https://github.com/janesmith",
                 "linkedin": "https://www.linkedin.com/in/janesmith/"
@@ -243,6 +249,7 @@ def main():
                 "image": "visuals/team/profile.jpg",
                 "name": "Charmaine",
                 "surname": "Mduli",
+                "role" : "",
                 "email": "charmainemdluli4@gmail.com",
                 "github": "https://github.com/janesmith",
                 "linkedin": "https://www.linkedin.com/in/janesmith/"
@@ -251,17 +258,19 @@ def main():
                 "image": "visuals/team/profile.jpg",
                 "name": "Britney",
                 "surname": "Mmetja",
+                "role" : "",
                 "email": "mmetjabritney@gmail.com",
                 "github": "https://github.com/janesmith",
-                "linkedin": "https://www.linkedin.com/in/janesmith/"
+                "linkedin": "https://www.linkedin.com/in/mmetja-britney-b997362bb/"
             },
             {
-                "image": "visuals/team/profile.jpg",
+                "image": "visuals/team/SakhumuziMchunu.jpg",
                 "name": "Sakhumuzi",
                 "surname": "Mchunu",
+                "role" : "",
                 "email": "sakhumuzimchunu@gmail.com",
                 "github": "https://github.com/janesmith",
-                "linkedin": "https://www.linkedin.com/in/janesmith/"
+                "linkedin": "https://www.linkedin.com/in/sakhumuzi-mchunu-ab5a99130/"
             },
         ]
 
@@ -272,6 +281,7 @@ def main():
                     image=member["image"],
                     name=member["name"],
                     surname=member["surname"],
+                    role=member["role"],
                     email=member["email"],
                     github=member["github"],
                     linkedin=member["linkedin"]
@@ -279,6 +289,5 @@ def main():
                 st.markdown("<br>", unsafe_allow_html=True)
 
 
-# Running the app
 if __name__ == '__main__':
     main()
