@@ -3,6 +3,8 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from PIL import Image
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 st.set_page_config(page_title="Anime Recommender", 
                    page_icon=":shark:", 
@@ -135,7 +137,52 @@ def main():
     elif page == "EDA":
         st.title("Exploratory Data Analysis (EDA)")
         st.write("## Data Insights and Visualizations")
-        st.write("Visualizations and insights will go here.")
+        
+        # Define available visualizations
+        visualizations = {
+            "Genre Distribution": "genre_distribution",
+            "Rating Distribution": "rating_distribution",
+            "Top 10 Most Popular Anime": "top_10_popular",
+        }
+        
+        # Sidebar options for EDA visualizations
+        visualization_choice = st.selectbox("Choose a visualization:", list(visualizations.keys()))
+        
+        # Display selected visualization with insights
+        if visualization_choice == "Genre Distribution":
+            st.subheader("Genre Distribution")
+            fig, ax = plt.subplots()
+            genre_counts = anime_data['genre'].str.split(', ').explode().value_counts()
+            sns.barplot(x=genre_counts.values, y=genre_counts.index, ax=ax)
+            st.pyplot(fig)
+            st.write("""
+            **Insights:**
+            - This bar chart shows the distribution of genres across the anime dataset.
+            - The most common genres are Action, Comedy, and Drama.
+            """)
+
+        elif visualization_choice == "Rating Distribution":
+            st.subheader("Rating Distribution")
+            fig, ax = plt.subplots()
+            sns.histplot(anime_data['rating'].dropna(), bins=20, kde=True, ax=ax)
+            st.pyplot(fig)
+            st.write("""
+            **Insights:**
+            - This histogram shows the distribution of ratings across the anime dataset.
+            - Most anime have ratings between 6 and 8.
+            """)
+
+        elif visualization_choice == "Top 10 Most Popular Anime":
+            st.subheader("Top 10 Most Popular Anime")
+            top_10_anime = anime_data.nlargest(10, 'members')
+            fig, ax = plt.subplots()
+            sns.barplot(x=top_10_anime['members'], y=top_10_anime['name'], ax=ax)
+            st.pyplot(fig)
+            st.write("""
+            **Insights:**
+            - This bar chart shows the top 10 most popular anime based on the number of members.
+            - These anime titles have a high number of followers, indicating their popularity.
+            """)
 
     # Team Page
     elif page == "About Us":
