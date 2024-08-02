@@ -318,7 +318,7 @@ def main():
                 "role" : "Model Dev",
                 "email": "charmainemdluli4@gmail.com",
                 "github": "https://github.com/charmainemdluli",
-                "linkedin": "https://www.linkedin.com/in/charmaine-mdluli/"
+                "linkedin": "https://www.linkedin.com/in/charmaine-mdluli-427a3b221/"
             },
             {
                 "image": "visuals/team/profile.jpg",
