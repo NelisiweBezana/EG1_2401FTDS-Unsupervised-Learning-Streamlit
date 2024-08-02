@@ -5,6 +5,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 from PIL import Image
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pickle
+import surprise
+from surprise import SVD, Dataset, Reader
+from surprise.model_selection import train_test_split
 
 st.set_page_config(page_title="Anime Recommender", 
                    page_icon=":shark:", 
@@ -12,16 +16,11 @@ st.set_page_config(page_title="Anime Recommender",
                    initial_sidebar_state="expanded",
                    )
 
-def display_team_member(image, name, surname, role, email, github, linkedin):
-    st.image(image, width=120)
-    st.markdown(f"**{name} {surname}**")
-    st.markdown(f"{role}")
-    st.markdown(f"{email}")
-    st.markdown(f"[GitHub]({github}) / [LinkedIn]({linkedin})")
-
 # Loading data
 anime_data = pd.read_csv('Data/anime.csv')
 anime_data['genre'] = anime_data['genre'].fillna('')
+train_data = pd.read_csv('Data/train.csv')
+test_data = pd.read_csv('Data/test.csv')
 
 def main():
     st.sidebar.title("Navigation")
@@ -84,8 +83,51 @@ def main():
                 else:
                     st.write("No recommendations available.")
             else:
-                # model-based collaborative filtering logic (loading a pickled model)
-                pass
+                # model-based collaborative filtering logic
+                # Load collaborative filtering model
+                with open('models/Collaboration_filtering_model.pkl', 'rb') as file:
+                    collaborative_filtering_model = pickle.load(file)
+
+                # Collaborative filtering logic
+                def get_collaborative_recommendations(user_anime):
+                    # Ensure user_anime titles are in the dataset
+                    user_anime_ids = anime_data[anime_data['name'].isin(user_anime)]['anime_id'].tolist()
+                    
+                    if not user_anime_ids:
+                        st.write("None of the entered anime titles were found in the dataset.")
+                        return []
+
+                    # Prepare dataset for predictions
+                    reader = Reader(rating_scale=(0, 10))  # Adjust the scale if needed
+                    data = Dataset.load_from_df(train_data[['user_id', 'anime_id', 'rating']], reader)
+                    trainset = data.build_full_trainset()
+
+                    # Load collaborative filtering model
+                    with open('models/Collaboration_filtering_model.pkl', 'rb') as file:
+                        collaborative_filtering_model = pickle.load(file)
+
+                    # Predict ratings for all anime
+                    predictions = []
+                    for anime_id in anime_data['anime_id']:
+                        if anime_id not in user_anime_ids:
+                            pred = collaborative_filtering_model.predict(uid='user_id', iid=anime_id)  # Replace 'user_id' with a placeholder
+                            predictions.append((anime_id, pred.est))
+                    
+                    # Sort predictions by estimated rating and get top 10
+                    predictions.sort(key=lambda x: x[1], reverse=True)
+                    top_recommendations = [anime_data[anime_data['anime_id'] == anime_id]['name'].values[0] for anime_id, _ in predictions[:10]]
+
+                    return top_recommendations
+
+                recommendations = get_collaborative_recommendations([first_anime, second_anime, third_anime])
+                
+                if len(recommendations) > 0:
+                    st.write("### Recommended Anime:")
+                    for rec in recommendations:
+                        st.write(f"- {rec}")
+                else:
+                    st.write("No recommendations available.")
+
 
    
     # About Page
@@ -148,6 +190,11 @@ def main():
             "Top 10 Most Popular Anime": "top_10_popular",
             "Top Rated Anime": "top_rated",
         }
+
+        anime_palette = sns.color_palette(["#00BFFF", "#1E90FF"])
+
+        # Set the custom palette globally
+        sns.set_palette(anime_palette)
         
         visualization_choice = st.selectbox("Choose a visualization:", list(visualizations.keys()))
         
@@ -163,8 +210,11 @@ def main():
             st.pyplot(fig)
             st.write("""
             **Insights:**
-            - This bar chart shows the distribution of genres across the anime dataset.
-            - The most common genres are Action, Comedy, and Drama.
+            - Comedy is the most common genre, followed by Action, Adventure, and Fantasy.
+            - The genres are sorted in descending order, with Comedy having the highest count and Yaoi the lowest.
+            - Popular genres like Drama, Sci-Fi, and Romance also appear frequently, while niche genres like Yuri, Yaoi, and Josei are less common.
+            - This chart indicates that anime often incorporates humor and action, with a diverse range of other themes also being well-represented.
+            - The variety of genres suggests a wide array of anime content to cater to different audience preferences.
             """)
 
         elif visualization_choice == "Rating Distribution":
@@ -177,8 +227,11 @@ def main():
             st.pyplot(fig)
             st.write("""
             **Insights:**
-            - This histogram shows the distribution of ratings across the anime dataset.
-            - Most anime have ratings between 6 and 8.
+            - Most anime ratings are around 6-7, meaning people generally rate shows in this range. 
+            - The ratings spread from about 2 to 10, but very few shows get really low or really high scores. 
+                     This pattern shows that most anime are seen as average or slightly above average. 
+            - The shape of the ratings looks like a bell curve, with most scores clustering in the middle. 
+            - Overall, it indicates that people tend to rate anime favorably.
             """)
 
         elif visualization_choice == "Top 10 Most Popular Anime":
@@ -192,8 +245,11 @@ def main():
             st.pyplot(fig)
             st.write("""
             **Insights:**
-            - This bar chart shows the top 10 most popular anime based on the number of members.
-            - These anime titles have a high number of followers, indicating their popularity.
+            - “Death Note” leads with the highest number of members.
+            - “Shingeki no Kyojin” and “Sword Art Online” follow closely.
+            - Diverse Selection: The list includes a mix of genres, 
+                     from action-packed series like “Naruto” to emotional dramas like “Angel Beats!”.
+            - The number of members ranges from around 1.6 million for “Death Note” to lower numbers for others on the list.
             """)
 
         elif visualization_choice == "Top Rated Anime":
@@ -207,8 +263,11 @@ def main():
             st.pyplot(fig)
             st.write("""
             **Insights:**
-            - This bar chart shows the top 10 highest-rated anime.
-            - These titles are highly rated by viewers, indicating their quality and viewer satisfaction.
+            - Rating Scale: Ratings are on a scale from 0 to 10, with most top-rated anime scoring above 8.
+            - Top Anime: “Fullmetal Alchemist: Brotherhood” and “Steins Gate” are among the highest-rated.
+            - The list includes a variety of genres, from action-packed series like “Gintama” to emotional dramas like “Kimi no Na wa.”
+            - This chart provides a visual representation of anime rankings, 
+                    useful for recommendations or understanding popular preferences.
             """)
 
 
@@ -217,6 +276,13 @@ def main():
         st.title("Meet the team")
         st.write("Our team is a group of passionate individuals dedicated to creating an innovative anime recommender system. Each member brings unique skills and expertise to the project, contributing to its success. Below, you will find the team members behind the system, their roles, and how to connect with them.")
         
+        def display_team_member(image, name, surname, role, email, github, linkedin):
+            st.image(image, width=120)
+            st.markdown(f"**{name} {surname}**")
+            st.markdown(f"{role}")
+            st.markdown(f"{email}")
+            st.markdown(f"[GitHub]({github}) / [LinkedIn]({linkedin})")
+
         team_members = [
             {
                 "image": "visuals/team/NelisiweBezana.jpg",
@@ -237,13 +303,13 @@ def main():
                 "linkedin": "https://www.linkedin.com/in/tshepiso-mudau-34b10226a/"
             },
             {
-                "image": "visuals/team/profile.jpg",
+                "image": "visuals/team/KhuthadzoTshifura.jpg",
                 "name": "Khuthadzo",
                 "surname": "Tshifura",
                 "role" : "Data Cleaning | EDA",
                 "email": "tshifurakhuthadzo@gmail.com",
-                "github": "https://github.com/janesmith",
-                "linkedin": "https://www.linkedin.com/in/janesmith/"
+                "github": "https://github.com/tshifurakm",
+                "linkedin": "https://www.linkedin.com/in/khuthadzo-tshifura-642671120/"
             },
             {
                 "image": "visuals/team/profile.jpg",
@@ -251,25 +317,25 @@ def main():
                 "surname": "Mduli",
                 "role" : "Model Dev",
                 "email": "charmainemdluli4@gmail.com",
-                "github": "https://github.com/janesmith",
-                "linkedin": "https://www.linkedin.com/in/janesmith/"
+                "github": "https://github.com/charmainemdluli",
+                "linkedin": "https://www.linkedin.com/in/charmaine-mdluli/"
             },
             {
                 "image": "visuals/team/profile.jpg",
                 "name": "Britney",
                 "surname": "Mmetja",
-                "role" : "",
+                "role" : "Data processing",
                 "email": "mmetjabritney@gmail.com",
-                "github": "https://github.com/janesmith",
+                "github": "https://github.com/Britney44",
                 "linkedin": "https://www.linkedin.com/in/mmetja-britney-b997362bb/"
             },
             {
                 "image": "visuals/team/SakhumuziMchunu.jpg",
                 "name": "Sakhumuzi",
                 "surname": "Mchunu",
-                "role" : "",
+                "role" : "EDA",
                 "email": "sakhumuzimchunu@gmail.com",
-                "github": "https://github.com/janesmith",
+                "github": "https://github.com/SakhumuziMchunu",
                 "linkedin": "https://www.linkedin.com/in/sakhumuzi-mchunu-ab5a99130/"
             },
         ]
