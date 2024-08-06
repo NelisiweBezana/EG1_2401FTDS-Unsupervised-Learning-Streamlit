@@ -67,7 +67,7 @@ def main():
 
                     # Sort by similarity score and exclude the anime in the user’s list
                     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-                    sim_scores = [i for i in sim_scores if i[0] not in indices]  # Exclude user input anime
+                    sim_scores = [i for i in sim_scores if i[0] not in indices]  # Excluding user input anime
                     sim_scores = sim_scores[:10]  # Get top 10 recommendations
 
                     # Extract anime names for recommended indices
@@ -98,7 +98,7 @@ def main():
                         return []
 
                     # Prepare dataset for predictions
-                    reader = Reader(rating_scale=(0, 10))  # Adjust the scale if needed
+                    reader = Reader(rating_scale=(0, 10))
                     data = Dataset.load_from_df(train_data[['user_id', 'anime_id', 'rating']], reader)
                     trainset = data.build_full_trainset()
 
@@ -110,7 +110,7 @@ def main():
                     predictions = []
                     for anime_id in anime_data['anime_id']:
                         if anime_id not in user_anime_ids:
-                            pred = collaborative_filtering_model.predict(uid='user_id', iid=anime_id)  # Replace 'user_id' with a placeholder
+                            pred = collaborative_filtering_model.predict(uid='user_id', iid=anime_id)
                             predictions.append((anime_id, pred.est))
                     
                     # Sort predictions by estimated rating and get top 10
@@ -201,7 +201,7 @@ def main():
         # Display selected visualization with insights
         if visualization_choice == "Genre Distribution":
             st.subheader("Genre Distribution")
-            fig, ax = plt.subplots(figsize=(10, 8))  # Increase figure size
+            fig, ax = plt.subplots(figsize=(10, 8))
             genre_counts = anime_data['genre'].str.split(', ').explode().value_counts()
             sns.barplot(x=genre_counts.values, y=genre_counts.index, ax=ax)
             ax.set_xlabel('Count')
@@ -219,7 +219,7 @@ def main():
 
         elif visualization_choice == "Rating Distribution":
             st.subheader("Rating Distribution")
-            fig, ax = plt.subplots(figsize=(10, 6))  # Increase figure size
+            fig, ax = plt.subplots(figsize=(10, 6))
             sns.histplot(anime_data['rating'].dropna(), bins=20, kde=True, ax=ax)
             ax.set_xlabel('Rating')
             ax.set_ylabel('Count')
@@ -237,7 +237,7 @@ def main():
         elif visualization_choice == "Top 10 Most Popular Anime":
             st.subheader("Top 10 Most Popular Anime")
             top_10_anime = anime_data.nlargest(10, 'members')
-            fig, ax = plt.subplots(figsize=(10, 6))  # Increase figure size
+            fig, ax = plt.subplots(figsize=(10, 6))
             sns.barplot(x=top_10_anime['members'], y=top_10_anime['name'], ax=ax)
             ax.set_xlabel('Members')
             ax.set_ylabel('Anime')
