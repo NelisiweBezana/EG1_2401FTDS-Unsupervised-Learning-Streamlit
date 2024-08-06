@@ -11,9 +11,9 @@ from surprise import SVD, Dataset, Reader
 from surprise.model_selection import train_test_split
 
 st.set_page_config(page_title="Anime Recommender", 
-                   page_icon=":shark:", 
-                   layout="centered", 
+                   page_icon=":shark:",  
                    initial_sidebar_state="expanded",
+                   layout = "wide"
                    )
 
 # Loading data
