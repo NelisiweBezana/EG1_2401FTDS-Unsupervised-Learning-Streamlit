@@ -6,7 +6,6 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pickle
-import surprise
 from surprise import SVD, Dataset, Reader
 from surprise.model_selection import train_test_split
 
